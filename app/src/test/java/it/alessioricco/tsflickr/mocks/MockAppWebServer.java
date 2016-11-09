@@ -20,10 +20,7 @@ public class MockAppWebServer {
 
     // to force a response
     private @Setter
-    MockResponse newResponse;
-//    public void setMockResponse(final MockResponse mockResponse) {
-//        newResponse = mockResponse;
-//    }
+    MockResponse overridingResponse;
 
     /**
      * here will set all the responses we want to test
@@ -33,13 +30,15 @@ public class MockAppWebServer {
         @Override
         public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
 
-            if (newResponse != null) {
-                final MockResponse tmpMockResponse = newResponse;
-                newResponse = null;
+            if (overridingResponse != null) {
+                // just once
+                final MockResponse tmpMockResponse = overridingResponse;
+                overridingResponse = null;
                 return tmpMockResponse;
             }
 
-            if (request.getPath().equals("/services/feeds/photos_public.gne")){
+            //todo: improve this test
+            if (request.getPath().equals("/services/feeds/photos_public.gne?format=json&nojsoncallback=1")){
                 final String response = MockFlickrApiResults.getRawJsonFlickrFeed();
                 return new MockResponse()
                         .setResponseCode(200)
@@ -69,10 +68,6 @@ public class MockAppWebServer {
     public void start() throws IOException {
         mockWebServer.start();
     }
-
-//    public MockWebServer getMockWebServer() {
-//        return mockWebServer;
-//    }
 
     /**
      * shutdown the mock web server

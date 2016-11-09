@@ -8,6 +8,8 @@ import dagger.Module;
 import dagger.Provides;
 import it.alessioricco.tsflickr.App;
 import it.alessioricco.tsflickr.MainActivity;
+import it.alessioricco.tsflickr.api.RestAdapterFactory;
+import it.alessioricco.tsflickr.services.FlickrService;
 
 
 /**
@@ -19,7 +21,7 @@ import it.alessioricco.tsflickr.MainActivity;
 @Module(
         injects = {
                 App.class,
-
+                FlickrService.class,
                 MainActivity.class
         },
         library = true)
@@ -54,5 +56,13 @@ public class AppModule {
         return app;
     }
 
+    /**
+     * RestAdapter factory
+     * used to build a restadapter for the default ticker service endpoint
+     * @return a well formed RestAdapterFactory object
+     */
+    @Provides @Singleton public RestAdapterFactory provideRestAdapter() {
+        return new RestAdapterFactory();
+    }
 
 }

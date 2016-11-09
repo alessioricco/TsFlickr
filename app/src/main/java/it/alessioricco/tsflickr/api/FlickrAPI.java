@@ -14,25 +14,15 @@ import rx.Observable;
  *
  * documentation:
  * https://www.flickr.com/services/feeds/docs/photos_public
+ * http://stackoverflow.com/questions/27067970/gson-parsing-with-retrofit-parsing-flickr-json-response
  */
 public interface FlickrAPI {
 
     /**
      *
-     * @param id        (optional)
-     * @param ids       (optional)
-     * @param tags      (optional)
-     * @param tagMode   (optional)
-     * @param format    (optional) todo: must be json
-     * @param lang      (optional) todo: must be taken from the international phone settings ?
      * @return
      */
     @GET("/services/feeds/photos_public.gne")
-    Observable<JsonFlickrFeed> getPublicFlickrFeed(@Query("id") String id,
-                                                   @Query("ids") String ids,
-                                                   @Query("tags") String tags,
-                                                   @Query("tagmode") String tagMode,
-                                                   @Query("format") String format,
-                                                   @Query("lang") String lang);
+    Observable<JsonFlickrFeed> getPublicFlickrFeed(@Query("format") String format,@Query("nojsoncallback") int noJsonCallback);
 
 }

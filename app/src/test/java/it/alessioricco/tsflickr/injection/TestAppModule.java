@@ -11,6 +11,7 @@ import dagger.Provides;
 import it.alessioricco.tsflickr.api.RestAdapterFactory;
 import it.alessioricco.tsflickr.api.ShadowRestAdapterFactory;
 import it.alessioricco.tsflickr.mocks.MockAppWebServer;
+import it.alessioricco.tsflickr.services.TestFlickrService;
 
 
 @Module(includes = {
@@ -19,6 +20,7 @@ import it.alessioricco.tsflickr.mocks.MockAppWebServer;
         injects = {
                 // here the list of classes using injection
                 MockAppWebServer.class,
+                TestFlickrService.class,
                 ShadowRestAdapterFactory.class
         },
         library = true, overrides = true)

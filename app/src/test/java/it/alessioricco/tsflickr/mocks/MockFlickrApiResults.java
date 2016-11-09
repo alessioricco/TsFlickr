@@ -2,12 +2,8 @@ package it.alessioricco.tsflickr.mocks;
 
 import com.google.gson.Gson;
 
-import java.util.List;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
 import it.alessioricco.tsflickr.models.JsonFlickrFeed;
 import lombok.Getter;
-import rx.Observable;
 
 /**
  * fake results used for testing both with or without a fake web server
@@ -17,7 +13,7 @@ public class MockFlickrApiResults {
 
     private static @Getter
     String rawJsonFlickrFeed = "\n"+
-            "jsonFlickrFeed({\n"+
+            "{\n"+
             "\t\t\"title\": \"Uploads from everyone\",\n"+
             "\t\t\"link\": \"https://www.flickr.com/photos/\",\n"+
             "\t\t\"description\": \"\",\n"+
@@ -245,7 +241,7 @@ public class MockFlickrApiResults {
             "\t\t\t\"tags\": \"nikond7000 summer england themalvernhills panorama landscape themalverns when 1116tokina hills clouds\"\n"+
             "\t   }\n"+
             "        ]\n"+
-            "})";
+            "}";
 
 
     /**
