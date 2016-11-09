@@ -9,14 +9,12 @@ import org.junit.runner.RunWith;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowResources;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import it.alessioricco.tsflickr.TestEnvironment;
 import it.alessioricco.tsflickr.injection.TestObjectGraphSingleton;
 import it.alessioricco.tsflickr.mocks.MockAppWebServer;
-import it.alessioricco.tsflickr.models.JsonFlickrFeed;
+import it.alessioricco.tsflickr.models.FlickrFeed;
 import it.alessioricco.tsflickr.util.CustomRobolectricTestRunner;
 import okhttp3.mockwebserver.MockResponse;
 import rx.Observable;
@@ -63,12 +61,12 @@ public class TestFlickrService {
     @Test
     public void testFlickrPublicFeediResponseCodeWillBe500() throws Exception {
 
-        final Observable<JsonFlickrFeed> market = flickrService.getPublicFeed();
+        final Observable<FlickrFeed> market = flickrService.getPublicFeed();
 
         mockWebServer.setOverridingResponse(new MockResponse().setResponseCode(500));
 
         market.toBlocking()
-                .subscribe(new Subscriber<JsonFlickrFeed>() {
+                .subscribe(new Subscriber<FlickrFeed>() {
 
                     @Override
                     public void onCompleted() {
@@ -81,7 +79,7 @@ public class TestFlickrService {
                     }
 
                     @Override
-                    public void onNext(JsonFlickrFeed feed) {
+                    public void onNext(FlickrFeed feed) {
                         assert(false);
                     }
                 });
@@ -99,12 +97,12 @@ public class TestFlickrService {
 
         final String body = "";
 
-        final Observable<JsonFlickrFeed> market = flickrService.getPublicFeed();
+        final Observable<FlickrFeed> market = flickrService.getPublicFeed();
 
         mockWebServer.setOverridingResponse(new MockResponse().setResponseCode(200).setBody(body));
 
         market.toBlocking()
-                .subscribe(new Subscriber<JsonFlickrFeed>() {
+                .subscribe(new Subscriber<FlickrFeed>() {
 
                     @Override
                     public void onCompleted() {
@@ -117,7 +115,7 @@ public class TestFlickrService {
                     }
 
                     @Override
-                    public void onNext(JsonFlickrFeed feed) {
+                    public void onNext(FlickrFeed feed) {
                         assert(false);
                     }
                 });
@@ -131,10 +129,10 @@ public class TestFlickrService {
     @Test
     public void testFlickrPublicFeediResponseCodeWillBe200() throws Exception {
 
-        final Observable<JsonFlickrFeed> market = flickrService.getPublicFeed();
+        final Observable<FlickrFeed> market = flickrService.getPublicFeed();
 
         market.toBlocking()
-                .subscribe(new Subscriber<JsonFlickrFeed>() {
+                .subscribe(new Subscriber<FlickrFeed>() {
 
                     @Override
                     public void onCompleted() {
@@ -148,7 +146,7 @@ public class TestFlickrService {
                     }
 
                     @Override
-                    public void onNext(JsonFlickrFeed feed) {
+                    public void onNext(FlickrFeed feed) {
                         assertThat(feed).isNotNull();
                     }
                 });

@@ -2,14 +2,14 @@ package it.alessioricco.tsflickr.mocks;
 
 import com.google.gson.Gson;
 
-import it.alessioricco.tsflickr.models.JsonFlickrFeed;
+import it.alessioricco.tsflickr.models.FlickrFeed;
 import lombok.Getter;
 
 /**
  * fake results used for testing both with or without a fake web server
  */
 
-public class MockFlickrApiResults {
+public class MockFlickrFeedFactory {
 
     private static @Getter
     String rawJsonFlickrFeed = "\n"+
@@ -249,15 +249,15 @@ public class MockFlickrApiResults {
      * @param rawJsonFeed
      * @return
      */
-    public static JsonFlickrFeed getJsonFlickrFeedAsModel(final String rawJsonFeed) {
-        return new Gson().fromJson(rawJsonFeed, JsonFlickrFeed.class);
+    public static FlickrFeed createFlickrFeed(final String rawJsonFeed) {
+        return new Gson().fromJson(rawJsonFeed, FlickrFeed.class);
     }
 
     /**
      * return a Model built on the raw string
      * @return
      */
-    public static JsonFlickrFeed getJsonFlickrFeedAsModel() {
-        return getJsonFlickrFeedAsModel(rawJsonFlickrFeed);
+    public static FlickrFeed createFlickrFeed() {
+        return createFlickrFeed(rawJsonFlickrFeed);
     }
 }

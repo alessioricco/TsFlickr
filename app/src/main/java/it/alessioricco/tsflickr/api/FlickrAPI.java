@@ -1,9 +1,6 @@
 package it.alessioricco.tsflickr.api;
 
-import java.util.List;
-
-import it.alessioricco.tsflickr.models.JsonFlickrFeed;
-import retrofit2.Call;
+import it.alessioricco.tsflickr.models.FlickrFeed;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -23,6 +20,6 @@ public interface FlickrAPI {
      * @return
      */
     @GET("/services/feeds/photos_public.gne")
-    Observable<JsonFlickrFeed> getPublicFlickrFeed(@Query("format") String format,@Query("nojsoncallback") int noJsonCallback);
+    Observable<FlickrFeed> getPublicFlickrFeed(@Query("format") String format, @Query("nojsoncallback") int noJsonCallback);
 
 }

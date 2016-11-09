@@ -39,7 +39,7 @@ public class MockAppWebServer {
 
             //todo: improve this test
             if (request.getPath().equals("/services/feeds/photos_public.gne?format=json&nojsoncallback=1")){
-                final String response = MockFlickrApiResults.getRawJsonFlickrFeed();
+                final String response = MockFlickrFeedFactory.getRawJsonFlickrFeed();
                 return new MockResponse()
                         .setResponseCode(200)
                         .addHeader("Content-Type", "application/json; charset=utf-8")

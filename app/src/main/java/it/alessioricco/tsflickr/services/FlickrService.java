@@ -1,14 +1,12 @@
 package it.alessioricco.tsflickr.services;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import it.alessioricco.tsflickr.api.APIFactory;
 import it.alessioricco.tsflickr.api.FlickrAPI;
 import it.alessioricco.tsflickr.api.RestAdapterFactory;
 import it.alessioricco.tsflickr.injection.ObjectGraphSingleton;
-import it.alessioricco.tsflickr.models.JsonFlickrFeed;
+import it.alessioricco.tsflickr.models.FlickrFeed;
 import rx.Observable;
 
 
@@ -35,7 +33,7 @@ public final class FlickrService {
      * todo: this is with no parameters, we'll need some other methods with diff params
      * @return
      */
-    public Observable<JsonFlickrFeed> getPublicFeed() {
+    public Observable<FlickrFeed> getPublicFeed() {
 
         final FlickrAPI api = APIFactory.createFlickrAPI(restAdapterFactory.createJSONRestAdapter());
         return api.getPublicFlickrFeed("json",nojsoncallback);
