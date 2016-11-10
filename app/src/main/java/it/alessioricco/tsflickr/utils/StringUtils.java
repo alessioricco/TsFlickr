@@ -1,9 +1,8 @@
 package it.alessioricco.tsflickr.utils;
 
 /**
- * Created by alessioricco on 10/11/2016.
+ * String utility collection
  */
-
 public class StringUtils {
 
     public static boolean isNullOrEmpty(final String s) {

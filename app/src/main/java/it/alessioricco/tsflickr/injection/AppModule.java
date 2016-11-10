@@ -22,6 +22,7 @@ import it.alessioricco.tsflickr.services.FlickrService;
         injects = {
                 App.class,
                 FlickrService.class,
+                RestAdapterFactory.class,
                 MainActivity.class
         },
         library = true)
