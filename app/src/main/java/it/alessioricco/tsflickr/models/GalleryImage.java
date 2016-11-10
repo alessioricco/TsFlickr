@@ -30,4 +30,7 @@ public final class GalleryImage implements Serializable {
         return item.getDate_taken();
     }
 
+    public final String getTitle() {
+        return item.getTitle();
+    }
 }

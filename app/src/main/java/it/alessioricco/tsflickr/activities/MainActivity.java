@@ -1,9 +1,11 @@
 package it.alessioricco.tsflickr.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import it.alessioricco.tsflickr.R;
 import it.alessioricco.tsflickr.adapters.GalleryAdapter;
+import it.alessioricco.tsflickr.fragments.FullScreenDialogFragment;
 import it.alessioricco.tsflickr.injection.ObjectGraphSingleton;
 import it.alessioricco.tsflickr.models.FlickrFeed;
 import it.alessioricco.tsflickr.models.FlickrFeedItem;
@@ -36,7 +40,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -47,11 +50,11 @@ public class MainActivity extends AppCompatActivity
     @Inject
     FlickrService flickrService;
 
-    private String TAG = MainActivity.class.getSimpleName();
+    private final String TAG = MainActivity.class.getSimpleName();
 
-    private List<GalleryImage> images;
+    private final List<GalleryImage> images = new ArrayList<>();
     private ProgressDialog pDialog;
-    private GalleryAdapter mAdapter;
+    private GalleryAdapter galleryAdapter;
 
     @InjectView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -88,17 +91,39 @@ public class MainActivity extends AppCompatActivity
 
     private void initialize() {
 
+        final Context context = getApplicationContext();
+
         ObjectGraphSingleton.getInstance().inject(this);
         ButterKnife.inject(this);
 
         pDialog = new ProgressDialog(this);
-        images = new ArrayList<GalleryImage>();
-        mAdapter = new GalleryAdapter(getApplicationContext(), images);
+        galleryAdapter = new GalleryAdapter(getApplicationContext(), images);
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(galleryAdapter);
+        recyclerView.addOnItemTouchListener(new GalleryAdapter.RecyclerTouchListener(context,
+                recyclerView,
+                new GalleryAdapter.ClickListener() {
+
+            @Override
+            public void onClick(final View view, final int position) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(getString(R.string.param_images), (Serializable) images);
+                bundle.putInt(getString(R.string.param_position), position);
+
+                final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                final FullScreenDialogFragment newFragment = FullScreenDialogFragment.create();
+                newFragment.setArguments(bundle);
+                newFragment.show(ft, "slideshow");
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
     }
 
@@ -195,7 +220,6 @@ public class MainActivity extends AppCompatActivity
 
     private Subscription asyncFetchImages() {
 
-        //todo the progress must me show only the first time, then we should use another thing
         startProgress();
         final Observable<FlickrFeed> observable = flickrService.getPublicFeed();
 
@@ -205,7 +229,6 @@ public class MainActivity extends AppCompatActivity
                 .subscribe(new Subscriber<FlickrFeed>() {
                     @Override
                     public void onCompleted() {
-                        // todo hide the spinner
                         endProgress();
                     }
 
@@ -216,7 +239,6 @@ public class MainActivity extends AppCompatActivity
                             HttpException response = (HttpException) e;
                             int code = response.code();
                             //TODO: add a toast
-                            //TODO: retry if it doesn't works
                         }
                         //TODO: what happens to the UI?
                         endProgress();
@@ -230,7 +252,7 @@ public class MainActivity extends AppCompatActivity
                         for (FlickrFeedItem item: feed.getItems()) {
                             images.add(new GalleryImage(item));
                         }
-                        mAdapter.notifyDataSetChanged();
+                        galleryAdapter.notifyDataSetChanged();
                     }
                 });
     }

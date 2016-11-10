@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.List;
 
 import it.alessioricco.tsflickr.R;
+import it.alessioricco.tsflickr.activities.MainActivity;
 import it.alessioricco.tsflickr.models.GalleryImage;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,8 +31,10 @@ import lombok.Setter;
 
 public final class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ThumbnailViewHolder>  {
 
-    private List<GalleryImage> images;
-    private Context mContext;
+    private final String TAG = GalleryAdapter.class.getSimpleName();
+
+    private final List<GalleryImage> images;
+    private final Context mContext;
 
     public GalleryAdapter(Context context, List<GalleryImage> images) {
         mContext = context;
@@ -41,7 +44,7 @@ public final class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.Th
     @Override
     public ThumbnailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.gallery, parent, false);
+                .inflate(R.layout.gallery_thumbnails, parent, false);
 
         return new ThumbnailViewHolder(itemView);
     }
@@ -70,7 +73,7 @@ public final class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.Th
     }
 
     /**
-     * RecyclerView ViewHolder for the thumbnail gallery
+     * RecyclerView ViewHolder for the thumbnail gallery_thumbnails
      */
     protected final class ThumbnailViewHolder extends RecyclerView.ViewHolder {
         private @Getter @Setter ImageView thumbnail;
@@ -84,7 +87,7 @@ public final class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.Th
     /**
      * RecyclerView touch listener
      */
-    protected static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
+    public static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
         private GestureDetector gestureDetector;
         private GalleryAdapter.ClickListener clickListener;

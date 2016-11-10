@@ -6,4 +6,6 @@
 
     <string name="action_settings">Settings</string>
     <string name="downloading">Downloading images...</string>
+    <string name="param_images">images</string>
+    <string name="param_position">position</string>
 </resources>
