@@ -12,6 +12,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity
         ObjectGraphSingleton.getInstance().inject(this);
         ButterKnife.inject(this);
 
-        pDialog = new ProgressDialog(this);
+        //pDialog = new ProgressDialog(this);
         galleryAdapter = new GalleryAdapter(getApplicationContext(), images);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 2);
@@ -240,22 +241,37 @@ public class MainActivity extends AppCompatActivity
 
         // to avoid memory leaks
         compositeSubscription.unsubscribe();
+        pDialog=null;
     }
 
+    /**
+     * show the progress dialog
+     *
+     * it dismiss the the dialog to prevent a leak
+     * http://stackoverflow.com/questions/6614692/progressdialog-how-to-prevent-leaked-window
+     */
     void startProgress() {
 
         if (swipeRefreshLayout.isRefreshing()) {
-            //swipeRefreshLayout.setRefreshing(false);
             return;
         }
 
-        if (pDialog == null) {
+        if (pDialog != null) {
+            pDialog.dismiss();
+            pDialog = null;
             return;
         }
+        pDialog = new ProgressDialog(this);
         pDialog.setMessage(getString(R.string.downloading));
         pDialog.show();
     }
 
+    /**
+     * remove the progress dialog
+     *
+     * it dismiss the the dialog to prevent a leak
+     * http://stackoverflow.com/questions/6614692/progressdialog-how-to-prevent-leaked-window
+     */
     void endProgress() {
 
         if (swipeRefreshLayout.isRefreshing()) {
@@ -267,6 +283,7 @@ public class MainActivity extends AppCompatActivity
             return;
         }
         pDialog.hide();
+        pDialog.dismiss();
     }
 
 
@@ -305,6 +322,8 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
+        Log.d(TAG, String.format("received %d images",feed.getItems().size()));
+
         for (FlickrFeedItem item: feed.getItems()) {
             if (!GalleryImage.isValid(item)) {
                 continue;
@@ -328,11 +347,15 @@ public class MainActivity extends AppCompatActivity
                 .subscribe(new Subscriber<FlickrFeed>() {
                     @Override
                     public void onCompleted() {
+                        Log.d(TAG, "getFeedSubscription completed");
                         endProgress();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        if (e != null) {
+                            Log.e(TAG, e.getLocalizedMessage());
+                        }
                         endProgress();
                         showDownloadErrorMessage();
                     }

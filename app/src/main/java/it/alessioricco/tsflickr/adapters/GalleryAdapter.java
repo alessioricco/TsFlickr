@@ -17,6 +17,7 @@ import java.util.List;
 import it.alessioricco.tsflickr.R;
 import it.alessioricco.tsflickr.models.GalleryImage;
 import it.alessioricco.tsflickr.models.GalleryImages;
+import it.alessioricco.tsflickr.utils.ImageDownloader;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -54,11 +55,13 @@ public final class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.Th
         final GalleryImage image = images.get(position);
 
         // https://futurestud.io/tutorials/glide-thumbnails
-        Glide.with(mContext).load(image.getThumbnailImageURL())
-                .thumbnail(0.5f)
-                .crossFade()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.thumbnail);
+//        Glide.with(mContext).load(image.getThumbnailImageURL())
+//                .thumbnail(0.5f)
+//                .crossFade()
+//                .placeholder(android.R.drawable.presence_away)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .into(holder.thumbnail);
+        ImageDownloader.go(mContext, image.getThumbnailImageURL(), holder.thumbnail);
     }
 
     @Override
