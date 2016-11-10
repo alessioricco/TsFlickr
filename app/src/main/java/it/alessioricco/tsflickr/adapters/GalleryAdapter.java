@@ -16,6 +16,7 @@ import java.util.List;
 
 import it.alessioricco.tsflickr.R;
 import it.alessioricco.tsflickr.models.GalleryImage;
+import it.alessioricco.tsflickr.models.GalleryImages;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,10 +33,10 @@ public final class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.Th
 
     private final String TAG = GalleryAdapter.class.getSimpleName();
 
-    private final List<GalleryImage> images;
+    private final GalleryImages images;
     private final Context mContext;
 
-    public GalleryAdapter(Context context, List<GalleryImage> images) {
+    public GalleryAdapter(Context context, GalleryImages images) {
         mContext = context;
         this.images = images;
     }

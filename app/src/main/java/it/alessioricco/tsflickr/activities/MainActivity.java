@@ -34,6 +34,7 @@ import it.alessioricco.tsflickr.injection.ObjectGraphSingleton;
 import it.alessioricco.tsflickr.models.FlickrFeed;
 import it.alessioricco.tsflickr.models.FlickrFeedItem;
 import it.alessioricco.tsflickr.models.GalleryImage;
+import it.alessioricco.tsflickr.models.GalleryImages;
 import it.alessioricco.tsflickr.services.FlickrService;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity
 
     private final String TAG = MainActivity.class.getSimpleName();
 
-    private final List<GalleryImage> images = new ArrayList<>();
+    private final GalleryImages images = new GalleryImages();
     private ProgressDialog pDialog;
     private GalleryAdapter galleryAdapter;
 
@@ -259,6 +260,7 @@ public class MainActivity extends AppCompatActivity
                             }
                             images.add(new GalleryImage(item));
                         }
+
                         galleryAdapter.notifyDataSetChanged();
                     }
                 });

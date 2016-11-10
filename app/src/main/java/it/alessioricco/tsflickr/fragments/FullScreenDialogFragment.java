@@ -23,11 +23,12 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import it.alessioricco.tsflickr.R;
 import it.alessioricco.tsflickr.models.GalleryImage;
+import it.alessioricco.tsflickr.models.GalleryImages;
 
 
 public class FullScreenDialogFragment extends DialogFragment {
     private final String TAG = FullScreenDialogFragment.class.getSimpleName();
-    private ArrayList<GalleryImage> images;
+    private GalleryImages images;
 
     @InjectView(R.id.viewpager)
     ViewPager viewPager;
@@ -54,7 +55,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         // butterknife
         ButterKnife.inject(this, v);
 
-        images = (ArrayList<GalleryImage>) getArguments().getSerializable(getString(R.string.param_images));
+        images = (GalleryImages) getArguments().getSerializable(getString(R.string.param_images));
         selectedPosition = getArguments().getInt(getString(R.string.param_position));
 
         Log.e(TAG, "position: " + selectedPosition);
