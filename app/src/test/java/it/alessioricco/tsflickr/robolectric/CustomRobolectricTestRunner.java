@@ -1,4 +1,4 @@
-package it.alessioricco.tsflickr.util;
+package it.alessioricco.tsflickr.robolectric;
 
 import org.junit.runners.model.InitializationError;
 import org.robolectric.RobolectricTestRunner;

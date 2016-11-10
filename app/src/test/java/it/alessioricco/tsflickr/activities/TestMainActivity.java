@@ -14,10 +14,10 @@ import org.robolectric.util.ActivityController;
 import javax.inject.Inject;
 
 import it.alessioricco.tsflickr.BuildConfig;
-import it.alessioricco.tsflickr.TestEnvironment;
+import it.alessioricco.tsflickr.robolectric.TestEnvironment;
 import it.alessioricco.tsflickr.injection.TestObjectGraphSingleton;
 import it.alessioricco.tsflickr.mocks.MockAppWebServer;
-import it.alessioricco.tsflickr.util.CustomRobolectricTestRunner;
+import it.alessioricco.tsflickr.robolectric.CustomRobolectricTestRunner;
 import okhttp3.mockwebserver.MockResponse;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;

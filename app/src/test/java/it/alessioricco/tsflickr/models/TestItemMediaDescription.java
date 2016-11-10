@@ -7,9 +7,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowResources;
 
-import it.alessioricco.tsflickr.TestEnvironment;
+import it.alessioricco.tsflickr.robolectric.TestEnvironment;
 import it.alessioricco.tsflickr.mocks.MockItemMediaDescriptionFactory;
-import it.alessioricco.tsflickr.util.CustomRobolectricTestRunner;
+import it.alessioricco.tsflickr.robolectric.CustomRobolectricTestRunner;
 import rx.android.BuildConfig;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;

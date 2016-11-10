@@ -30,10 +30,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.Thumbnai
     private final String TAG = GalleryAdapter.class.getSimpleName();
 
     private final GalleryImages images;
-    private final Context mContext;
+    private final Context context;
 
     public GalleryAdapter(Context context, GalleryImages images) {
-        mContext = context;
+        this.context = context;
         this.images = images;
     }
 
@@ -49,7 +49,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.Thumbnai
     public void onBindViewHolder(ThumbnailViewHolder holder, int position) {
         final GalleryImage image = images.get(position);
 
-        ImageDownloader.go(mContext, image.getThumbnailImageURL(), holder.thumbnail);
+        ImageDownloader.go(context, image.getThumbnailImageURL(), holder.thumbnail);
     }
 
     @Override

@@ -6,6 +6,12 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sort"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+
     <item android:id="@+id/search"
         android:title="@string/search_tags"
         android:icon="@android:drawable/ic_menu_search"

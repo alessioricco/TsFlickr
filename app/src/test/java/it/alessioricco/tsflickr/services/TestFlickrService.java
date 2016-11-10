@@ -11,11 +11,11 @@ import org.robolectric.shadows.ShadowResources;
 
 import javax.inject.Inject;
 
-import it.alessioricco.tsflickr.TestEnvironment;
+import it.alessioricco.tsflickr.robolectric.TestEnvironment;
 import it.alessioricco.tsflickr.injection.TestObjectGraphSingleton;
 import it.alessioricco.tsflickr.mocks.MockAppWebServer;
 import it.alessioricco.tsflickr.models.FlickrFeed;
-import it.alessioricco.tsflickr.util.CustomRobolectricTestRunner;
+import it.alessioricco.tsflickr.robolectric.CustomRobolectricTestRunner;
 import okhttp3.mockwebserver.MockResponse;
 import rx.Observable;
 import rx.Subscriber;

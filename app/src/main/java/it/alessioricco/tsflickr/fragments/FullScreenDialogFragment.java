@@ -31,6 +31,9 @@ public class FullScreenDialogFragment extends DialogFragment {
     @InjectView(R.id.title)
     TextView title;
 
+    @InjectView(R.id.author)
+    TextView author;
+
     @InjectView(R.id.timestamp)
     TextView timestamp;
 
@@ -94,6 +97,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         }
         title.setText(image.getTitle());
         timestamp.setText(image.getTimestamp());
+        author.setText(image.getAuthor());
     }
 
     @Override

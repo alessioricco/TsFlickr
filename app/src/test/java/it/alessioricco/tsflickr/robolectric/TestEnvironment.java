@@ -1,4 +1,4 @@
-package it.alessioricco.tsflickr;
+package it.alessioricco.tsflickr.robolectric;
 
 /**
  * const used with Robolectric

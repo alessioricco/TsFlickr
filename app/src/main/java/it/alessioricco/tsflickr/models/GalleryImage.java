@@ -40,4 +40,8 @@ public final class GalleryImage implements Serializable {
     public final String getTitle() {
         return item.getTitle();
     }
+
+    public final String getAuthor() {
+        return item.getAuthor();
+    }
 }

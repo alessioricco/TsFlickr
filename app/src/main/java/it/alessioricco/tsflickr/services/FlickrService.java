@@ -37,9 +37,9 @@ public final class FlickrService {
         final FlickrAPI api = APIFactory.createFlickrAPI(restAdapterFactory.createJSONRestAdapter());
 
         if (StringUtils.isNullOrEmpty(tag)) {
-            return api.getPublicFlickrFeed("json", nojsoncallback);
+            return api.getPublicFlickrFeed(format, nojsoncallback);
         } else {
-            return api.getPublicFlickrFeed("json", nojsoncallback, tag);
+            return api.getPublicFlickrFeed(format, nojsoncallback, tag);
         }
     }
 
