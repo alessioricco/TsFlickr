@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -36,7 +37,7 @@ import it.alessioricco.tsflickr.models.FlickrFeedItem;
 import it.alessioricco.tsflickr.models.GalleryImage;
 import it.alessioricco.tsflickr.models.GalleryImages;
 import it.alessioricco.tsflickr.services.FlickrService;
-import retrofit2.adapter.rxjava.HttpException;
+import it.alessioricco.tsflickr.utils.StringUtils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -45,7 +46,8 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        SearchView.OnQueryTextListener {
 
     @Inject
     FlickrService flickrService;
@@ -53,10 +55,12 @@ public class MainActivity extends AppCompatActivity
 
     private final String TAG = MainActivity.class.getSimpleName();
 
+    private String currentTag = "";
     private final GalleryImages images = new GalleryImages();
     private ProgressDialog pDialog;
     private GalleryAdapter galleryAdapter;
 
+    SearchView searchView;
 
     @InjectView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -154,6 +158,28 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(this);
+        //searchView.setQuery(getString(R.string.search_hint), false);
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // reset the tag search
+                onQueryTextSubmit("");
+                return true;
+            }
+        });
+
         return true;
     }
 
@@ -248,13 +274,15 @@ public class MainActivity extends AppCompatActivity
      * Display an error message with a retry button
      */
     private void showDownloadErrorMessage() {
+
         Snackbar.make(recyclerView, R.string.error_downloading_gallery, Snackbar.LENGTH_LONG)
                 .setAction(R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         fetchImages();
                     }
-                }).show();
+                })
+                .show();
     }
 
     /**
@@ -292,7 +320,7 @@ public class MainActivity extends AppCompatActivity
     private Subscription getFeedSubscription() {
 
         startProgress();
-        final Observable<FlickrFeed> observable = flickrService.getPublicFeed();
+        final Observable<FlickrFeed> observable = flickrService.getPublicFeed(currentTag);
 
         return observable
                 .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
@@ -317,5 +345,20 @@ public class MainActivity extends AppCompatActivity
 
                     }
                 });
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        currentTag = query;
+        if (searchView != null) {
+            searchView.clearFocus();
+        }
+        fetchImages();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }

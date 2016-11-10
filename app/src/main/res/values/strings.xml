@@ -10,4 +10,6 @@
     <string name="param_position">position</string>
     <string name="error_downloading_gallery">Problem downloading the gallery</string>
     <string name="retry">Retry</string>
+    <string name="search_tags">insert tags</string>
+    <string name="search_hint">tag to search</string>
 </resources>

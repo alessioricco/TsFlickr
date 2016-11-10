@@ -22,4 +22,7 @@ public interface FlickrAPI {
     @GET("/services/feeds/photos_public.gne")
     Observable<FlickrFeed> getPublicFlickrFeed(@Query("format") String format, @Query("nojsoncallback") int noJsonCallback);
 
+    @GET("/services/feeds/photos_public.gne")
+    Observable<FlickrFeed> getPublicFlickrFeed(@Query("format") String format, @Query("nojsoncallback") int noJsonCallback, @Query("tags") String tag);
+
 }
