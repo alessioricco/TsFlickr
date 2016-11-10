@@ -3,6 +3,8 @@ package it.alessioricco.tsflickr.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -10,6 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,6 +42,15 @@ public class FullScreenDialogFragment extends DialogFragment {
     @InjectView(R.id.timestamp)
     TextView timestamp;
 
+    @InjectView(R.id.fab)
+    FloatingActionButton fab;
+
+    @InjectView(R.id.fab_1)
+    FloatingActionButton fab1;
+
+    @InjectView(R.id.fab_2)
+    FloatingActionButton fab2;
+
     private int selectedPosition = 0;
 
     static public FullScreenDialogFragment create() {
@@ -63,7 +77,47 @@ public class FullScreenDialogFragment extends DialogFragment {
 
         setCurrentItem(selectedPosition);
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (fab1.isClickable()) {
+                    hideFabMenu();
+                    return;
+                }
+                showFabMenu();
+            }
+        });
+        fab.bringToFront();
+
         return v;
+    }
+
+    private void showFabMenu() {
+
+        Animation show_fab_1 = AnimationUtils.loadAnimation(getContext(), R.anim.fab1_show);
+
+        fab.bringToFront();
+
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
+        layoutParams.rightMargin += (int) (fab1.getWidth() * 1.7);
+        layoutParams.bottomMargin += (int) (fab1.getHeight() * 0.25);
+        fab1.setLayoutParams(layoutParams);
+        fab1.startAnimation(show_fab_1);
+        fab1.setClickable(true);
+    }
+
+    private void hideFabMenu() {
+        Animation hide_fab_1 = AnimationUtils.loadAnimation(getContext(), R.anim.fab1_hide);
+
+        fab.bringToFront();
+
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
+        layoutParams.rightMargin -= (int) (fab1.getWidth() * 1.7);
+        layoutParams.bottomMargin -= (int) (fab1.getHeight() * 0.25);
+        fab1.setLayoutParams(layoutParams);
+        fab1.startAnimation(hide_fab_1);
+        fab1.setClickable(false);
     }
 
     private void setCurrentItem(int position) {

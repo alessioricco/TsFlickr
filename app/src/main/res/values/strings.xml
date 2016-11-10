@@ -13,4 +13,6 @@
     <string name="search_tags">insert tags</string>
     <string name="accessibility_full_screen_image">full screen image</string>
     <string name="accessibility_image_thumbnail">image thumbnail</string>
+    <string name="sort_by_date_taken">Sort by date taken</string>
+    <string name="sort_by_date_published">Sort by date published</string>
 </resources>
