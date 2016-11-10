@@ -25,7 +25,7 @@ import lombok.Setter;
  */
 
 
-public final class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ThumbnailViewHolder>  {
+public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ThumbnailViewHolder>  {
 
     private final String TAG = GalleryAdapter.class.getSimpleName();
 

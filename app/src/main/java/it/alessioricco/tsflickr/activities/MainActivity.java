@@ -37,6 +37,7 @@ import it.alessioricco.tsflickr.models.FlickrFeedItem;
 import it.alessioricco.tsflickr.models.GalleryImage;
 import it.alessioricco.tsflickr.models.GalleryImages;
 import it.alessioricco.tsflickr.services.FlickrService;
+import it.alessioricco.tsflickr.utils.StringUtils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -104,7 +105,6 @@ public class MainActivity extends AppCompatActivity
         ObjectGraphSingleton.getInstance().inject(this);
         ButterKnife.inject(this);
 
-        //pDialog = new ProgressDialog(this);
         galleryAdapter = new GalleryAdapter(getApplicationContext(), images);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 2);
@@ -161,7 +161,6 @@ public class MainActivity extends AppCompatActivity
         MenuItem searchItem = menu.findItem(R.id.search);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
-        //searchView.setQuery(getString(R.string.search_hint), false);
 
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
 
@@ -173,8 +172,11 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                // reset the tag search
-                onQueryTextSubmit("");
+
+                if (!StringUtils.isNullOrEmpty(currentTag)) {
+                    // reset search
+                    onQueryTextSubmit("");
+                }
                 return true;
             }
         });

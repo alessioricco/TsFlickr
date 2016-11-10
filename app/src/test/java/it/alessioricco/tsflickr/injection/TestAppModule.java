@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import it.alessioricco.tsflickr.activities.TestMainActivity;
 import it.alessioricco.tsflickr.api.RestAdapterFactory;
 import it.alessioricco.tsflickr.api.ShadowRestAdapterFactory;
 import it.alessioricco.tsflickr.mocks.MockAppWebServer;
@@ -21,6 +22,7 @@ import it.alessioricco.tsflickr.services.TestFlickrService;
                 // here the list of classes using injection
                 MockAppWebServer.class,
                 TestFlickrService.class,
+                TestMainActivity.class,
                 ShadowRestAdapterFactory.class
         },
         library = true, overrides = true)

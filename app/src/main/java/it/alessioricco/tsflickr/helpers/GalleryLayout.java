@@ -8,6 +8,8 @@ import android.widget.RelativeLayout;
 
 /**
  * will display pictures as squares
+ *
+ * http://stackoverflow.com/questions/8981029/simple-way-to-do-dynamic-but-square-layout
  */
 
 class GalleryLayout extends RelativeLayout {
