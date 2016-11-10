@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import it.alessioricco.tsflickr.App;
-import it.alessioricco.tsflickr.MainActivity;
+import it.alessioricco.tsflickr.activities.MainActivity;
 import it.alessioricco.tsflickr.api.RestAdapterFactory;
 import it.alessioricco.tsflickr.services.FlickrService;
 
