@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,8 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -47,9 +47,9 @@ import rx.subscriptions.CompositeSubscription;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    protected CompositeSubscription compositeSubscription = new CompositeSubscription();
     @Inject
     FlickrService flickrService;
+    protected CompositeSubscription compositeSubscription = new CompositeSubscription();
 
     private final String TAG = MainActivity.class.getSimpleName();
 
@@ -57,8 +57,12 @@ public class MainActivity extends AppCompatActivity
     private ProgressDialog pDialog;
     private GalleryAdapter galleryAdapter;
 
+
     @InjectView(R.id.recycler_view)
     RecyclerView recyclerView;
+
+    @InjectView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,23 +112,31 @@ public class MainActivity extends AppCompatActivity
                 recyclerView,
                 new GalleryAdapter.ClickListener() {
 
+                    @Override
+                    public void onClick(final View view, final int position) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(getString(R.string.param_images), (Serializable) images);
+                        bundle.putInt(getString(R.string.param_position), position);
+
+                        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        final FullScreenDialogFragment newFragment = FullScreenDialogFragment.create();
+                        newFragment.setArguments(bundle);
+                        newFragment.show(ft, "slideshow");
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int position) {
+
+                    }
+                }));
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(final View view, final int position) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(getString(R.string.param_images), (Serializable) images);
-                bundle.putInt(getString(R.string.param_position), position);
-
-                final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                final FullScreenDialogFragment newFragment = FullScreenDialogFragment.create();
-                newFragment.setArguments(bundle);
-                newFragment.show(ft, "slideshow");
+            public void onRefresh() {
+                // Refresh items
+                fetchImages();
             }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
+        });
 
     }
 
@@ -192,7 +204,7 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
 
-        compositeSubscription.add(asyncFetchImages());
+        fetchImages();
 
     }
 
@@ -200,11 +212,17 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
 
-        // avoid memory leaks
+        // to avoid memory leaks
         compositeSubscription.unsubscribe();
     }
 
     void startProgress() {
+
+        if (swipeRefreshLayout.isRefreshing()) {
+            //swipeRefreshLayout.setRefreshing(false);
+            return;
+        }
+
         if (pDialog == null) {
             return;
         }
@@ -213,13 +231,65 @@ public class MainActivity extends AppCompatActivity
     }
 
     void endProgress() {
+
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+            return;
+        }
+
         if (pDialog == null) {
             return;
         }
         pDialog.hide();
     }
 
-    private Subscription asyncFetchImages() {
+
+    /**
+     * Display an error message with a retry button
+     */
+    private void showDownloadErrorMessage() {
+        Snackbar.make(recyclerView, R.string.error_downloading_gallery, Snackbar.LENGTH_LONG)
+                .setAction(R.string.retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fetchImages();
+                    }
+                }).show();
+    }
+
+    /**
+     * fetch the images and submit them to the subscriber
+     */
+    private void fetchImages() {
+        // it will fetch images
+        if (compositeSubscription.isUnsubscribed()) {
+            return;
+        }
+
+        compositeSubscription.add(getFeedSubscription());
+    }
+
+    void convertFeedToGalleryImage(final FlickrFeed feed) {
+        images.clear();
+
+        if (feed.getItems() == null) {
+            // this should never happen
+            return;
+        }
+
+        for (FlickrFeedItem item: feed.getItems()) {
+            if (!GalleryImage.isValid(item)) {
+                continue;
+            }
+            images.add(new GalleryImage(item));
+        }
+    }
+
+    /**
+     * return a subscription object for fetching the images
+     * @return
+     */
+    private Subscription getFeedSubscription() {
 
         startProgress();
         final Observable<FlickrFeed> observable = flickrService.getPublicFeed();
@@ -235,33 +305,16 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onError(Throwable e) {
-                        // cast to retrofit.HttpException to get the response code
-                        if (e instanceof HttpException) {
-                            HttpException response = (HttpException) e;
-                            int code = response.code();
-                            //TODO: add a toast
-                        }
-                        //TODO: what happens to the UI?
                         endProgress();
+                        showDownloadErrorMessage();
                     }
 
                     @Override
                     public void onNext(FlickrFeed feed) {
 
-                        //todo: apply a map transformation
-                        images.clear();
-                        if (feed.getItems() == null) {
-                            // this should never happen
-                            return;
-                        }
-                        for (FlickrFeedItem item: feed.getItems()) {
-                            if (!GalleryImage.isValid(item)) {
-                                continue;
-                            }
-                            images.add(new GalleryImage(item));
-                        }
-
+                        convertFeedToGalleryImage(feed);
                         galleryAdapter.notifyDataSetChanged();
+
                     }
                 });
     }
