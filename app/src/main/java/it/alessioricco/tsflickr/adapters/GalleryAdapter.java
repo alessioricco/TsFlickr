@@ -1,18 +1,13 @@
 package it.alessioricco.tsflickr.adapters;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.MotionEvent;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
-import java.util.List;
 
 import it.alessioricco.tsflickr.R;
 import it.alessioricco.tsflickr.models.GalleryImage;
@@ -100,7 +95,7 @@ public final class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.Th
                 public void onLongPress(MotionEvent e) {
                     View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                     if (child != null && clickListener != null) {
-                        clickListener.onLongClick(child, recyclerView.getChildPosition(child));
+                        clickListener.onLongClick(child, recyclerView.getChildLayoutPosition(child));
                     }
                 }
             });
@@ -111,7 +106,7 @@ public final class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.Th
 
             View child = rv.findChildViewUnder(e.getX(), e.getY());
             if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
-                clickListener.onClick(child, rv.getChildPosition(child));
+                clickListener.onClick(child, rv.getChildLayoutPosition(child));
             }
             return false;
         }

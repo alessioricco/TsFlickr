@@ -25,7 +25,7 @@ public class MockAppWebServer {
     /**
      * here will set all the responses we want to test
      */
-    final Dispatcher dispatcher = new Dispatcher() {
+    private final Dispatcher dispatcher = new Dispatcher() {
 
         @Override
         public MockResponse dispatch(RecordedRequest request) throws InterruptedException {

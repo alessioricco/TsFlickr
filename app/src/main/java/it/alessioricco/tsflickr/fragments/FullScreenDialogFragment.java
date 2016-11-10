@@ -1,23 +1,17 @@
 package it.alessioricco.tsflickr.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import android.content.Context;
-import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.widget.ImageView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
-import java.util.ArrayList;
+import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -40,12 +34,10 @@ public class FullScreenDialogFragment extends DialogFragment {
     @InjectView(R.id.timestamp)
     TextView timestamp;
 
-    private SlideShowPagerAdapter slideShowPagerAdapter;
     private int selectedPosition = 0;
 
     static public FullScreenDialogFragment create() {
-        FullScreenDialogFragment f = new FullScreenDialogFragment();
-        return f;
+        return new FullScreenDialogFragment();
     }
 
     @Override
@@ -62,7 +54,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         Log.e(TAG, "position: " + selectedPosition);
         Log.e(TAG, "images size: " + images.size());
 
-        slideShowPagerAdapter = new SlideShowPagerAdapter();
+        SlideShowPagerAdapter slideShowPagerAdapter = new SlideShowPagerAdapter();
         viewPager.setAdapter(slideShowPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
@@ -144,7 +136,7 @@ public class FullScreenDialogFragment extends DialogFragment {
 
         @Override
         public boolean isViewFromObject(View view, Object obj) {
-            return view == ((View) obj);
+            return view == obj;
         }
 
 

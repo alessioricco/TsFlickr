@@ -22,13 +22,7 @@ public final class GalleryImage implements Serializable {
         if (item == null) {
             return false;
         }
-        if (item.getMedia() == null) {
-            return false;
-        }
-        if (! item.getMedia().isValid()) {
-            return false;
-        }
-        return true;
+        return item.getMedia() != null && item.getMedia().isValid();
     }
 
     public final String getThumbnailImageURL() {

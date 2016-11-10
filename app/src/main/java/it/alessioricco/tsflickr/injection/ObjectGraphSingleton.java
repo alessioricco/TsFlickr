@@ -1,10 +1,10 @@
 package it.alessioricco.tsflickr.injection;
-/**
- * Created by alessioricco on 02/10/2016.
- */
 
 import dagger.ObjectGraph;
 
+/**
+ * Object graph for Dagger
+ */
 public class ObjectGraphSingleton {
     private static ObjectGraph instance = null;
 

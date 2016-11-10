@@ -1,7 +1,6 @@
 package it.alessioricco.tsflickr.models;
 
 import android.util.Patterns;
-import android.webkit.URLUtil;
 
 import java.io.Serializable;
 
@@ -39,13 +38,11 @@ import lombok.Setter;
  */
 public class ItemMediaDescription implements Serializable {
 
-    // it will contains the picture url in small format
+    //todo: improve all those "replace" because they are potentially buggy
     @Getter @Setter private String m;
 
-    private static String defaultExtension = ".jpg";
-
     public String getOriginal() {
-        return m.replace("_m.jpg", defaultExtension);
+        return m.replace("_m.jpg", ".jpg");
     }
 
     public String getSmallSquare() {
@@ -68,10 +65,7 @@ public class ItemMediaDescription implements Serializable {
         if (url == null || url.length() ==0) {
             return false;
         }
-        if (!(Patterns.WEB_URL.matcher(url).matches())) {
-            return false;
-        }
-        return true;
+        return Patterns.WEB_URL.matcher(url).matches();
     }
 
 }

@@ -1,7 +1,6 @@
 package it.alessioricco.tsflickr.models;
 
 import android.util.Patterns;
-import android.webkit.URLUtil;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

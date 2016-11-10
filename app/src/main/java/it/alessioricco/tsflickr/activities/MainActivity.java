@@ -3,27 +3,26 @@ package it.alessioricco.tsflickr.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.io.Serializable;
+import android.view.View;
 
 import javax.inject.Inject;
 
@@ -38,7 +37,6 @@ import it.alessioricco.tsflickr.models.FlickrFeedItem;
 import it.alessioricco.tsflickr.models.GalleryImage;
 import it.alessioricco.tsflickr.models.GalleryImages;
 import it.alessioricco.tsflickr.services.FlickrService;
-import it.alessioricco.tsflickr.utils.StringUtils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -120,7 +118,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onClick(final View view, final int position) {
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable(getString(R.string.param_images), (Serializable) images);
+                        bundle.putSerializable(getString(R.string.param_images), images);
                         bundle.putInt(getString(R.string.param_position), position);
 
                         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -201,7 +199,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 

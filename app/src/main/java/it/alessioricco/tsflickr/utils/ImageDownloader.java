@@ -8,6 +8,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 /**
  * Images downloader
+ * encapsulate glide
  */
 public class ImageDownloader {
 

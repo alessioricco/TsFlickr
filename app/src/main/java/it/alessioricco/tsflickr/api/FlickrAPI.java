@@ -15,10 +15,6 @@ import rx.Observable;
  */
 public interface FlickrAPI {
 
-    /**
-     *
-     * @return
-     */
     @GET("/services/feeds/photos_public.gne")
     Observable<FlickrFeed> getPublicFlickrFeed(@Query("format") String format, @Query("nojsoncallback") int noJsonCallback);
 

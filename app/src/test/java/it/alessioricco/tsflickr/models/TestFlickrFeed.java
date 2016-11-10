@@ -4,11 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import it.alessioricco.tsflickr.api.FlickrAPI;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 /**

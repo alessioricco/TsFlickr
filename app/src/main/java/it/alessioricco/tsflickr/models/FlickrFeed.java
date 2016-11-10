@@ -1,7 +1,6 @@
 package it.alessioricco.tsflickr.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
@@ -22,5 +21,5 @@ public class FlickrFeed implements Serializable {
     @Getter @Setter private String modified;
     @Getter @Setter private String generator;
 
-    @Getter @Setter private List<FlickrFeedItem> items; // = new ArrayList<FlickrFeedItem>();
+    @Getter @Setter private List<FlickrFeedItem> items;
 }

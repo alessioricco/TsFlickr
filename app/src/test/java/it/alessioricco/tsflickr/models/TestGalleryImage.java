@@ -57,7 +57,7 @@ public class TestGalleryImage {
         model = new GalleryImage(feedItem);
         assertThat(model).isNotNull();
 
-        assertThat(model.isValid(feedItem)).isTrue();
+        assertThat(GalleryImage.isValid(feedItem)).isTrue();
 
         assertThat(model.getTitle()).isEqualTo(feedItem.getTitle());
         assertThat(model.getTimestamp()).isEqualTo(feedItem.getDate_taken());

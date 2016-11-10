@@ -5,11 +5,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="downloading">Downloading images...</string>
+    <string name="downloading">Downloading images…</string>
     <string name="param_images">images</string>
     <string name="param_position">position</string>
     <string name="error_downloading_gallery">Problem downloading the gallery</string>
     <string name="retry">Retry</string>
     <string name="search_tags">insert tags</string>
-    <string name="search_hint">tag to search</string>
+    <string name="accessibility_full_screen_image">full screen image</string>
+    <string name="accessibility_image_thumbnail">image thumbnail</string>
 </resources>

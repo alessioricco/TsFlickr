@@ -61,7 +61,7 @@ public class TestFlickrService {
     @Test
     public void testFlickrPublicFeediResponseCodeWillBe500() throws Exception {
 
-        final Observable<FlickrFeed> market = flickrService.getPublicFeed();
+        final Observable<FlickrFeed> market = flickrService.getPublicFeed("");
 
         mockWebServer.setOverridingResponse(new MockResponse().setResponseCode(500));
 
@@ -97,7 +97,7 @@ public class TestFlickrService {
 
         final String body = "";
 
-        final Observable<FlickrFeed> market = flickrService.getPublicFeed();
+        final Observable<FlickrFeed> market = flickrService.getPublicFeed("");
 
         mockWebServer.setOverridingResponse(new MockResponse().setResponseCode(200).setBody(body));
 
@@ -129,7 +129,7 @@ public class TestFlickrService {
     @Test
     public void testFlickrPublicFeediResponseCodeWillBe200() throws Exception {
 
-        final Observable<FlickrFeed> market = flickrService.getPublicFeed();
+        final Observable<FlickrFeed> market = flickrService.getPublicFeed("");
 
         market.toBlocking()
                 .subscribe(new Subscriber<FlickrFeed>() {
