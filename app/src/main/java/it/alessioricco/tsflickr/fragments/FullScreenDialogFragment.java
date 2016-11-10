@@ -24,6 +24,7 @@ import butterknife.InjectView;
 import it.alessioricco.tsflickr.R;
 import it.alessioricco.tsflickr.models.GalleryImage;
 import it.alessioricco.tsflickr.models.GalleryImages;
+import it.alessioricco.tsflickr.utils.ImageDownloader;
 
 
 public class FullScreenDialogFragment extends DialogFragment {
@@ -130,12 +131,7 @@ public class FullScreenDialogFragment extends DialogFragment {
 
             final GalleryImage image = images.get(position);
 
-            Glide.with(getActivity()).load(image.getFullScreenImageURL())
-                    .thumbnail(0.5f)
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imageViewPreview);
-
+            ImageDownloader.go(getContext(), image.getFullScreenImageURL(), imageViewPreview);
             container.addView(view);
 
             return view;

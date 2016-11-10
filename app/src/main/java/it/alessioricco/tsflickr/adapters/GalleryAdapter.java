@@ -54,13 +54,6 @@ public final class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.Th
     public void onBindViewHolder(ThumbnailViewHolder holder, int position) {
         final GalleryImage image = images.get(position);
 
-        // https://futurestud.io/tutorials/glide-thumbnails
-//        Glide.with(mContext).load(image.getThumbnailImageURL())
-//                .thumbnail(0.5f)
-//                .crossFade()
-//                .placeholder(android.R.drawable.presence_away)
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .into(holder.thumbnail);
         ImageDownloader.go(mContext, image.getThumbnailImageURL(), holder.thumbnail);
     }
 
