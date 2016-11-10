@@ -11,18 +11,31 @@ public final class GalleryImage implements Serializable {
     private final FlickrFeedItem item;
 
     public GalleryImage(FlickrFeedItem item) {
+        if (!isValid(item)) {
+            throw new IllegalArgumentException("the argument is null or invalid");
+        }
+
         this.item  = item;
     }
 
-    public final String getSmall() {
-        return item.getMedia().getSmallSquare();
+    public static boolean isValid(final FlickrFeedItem item) {
+        if (item == null) {
+            return false;
+        }
+        if (item.getMedia() == null) {
+            return false;
+        }
+        if (! item.getMedia().isValid()) {
+            return false;
+        }
+        return true;
     }
 
-    public final String getMedium() {
+    public final String getThumbnailImageURL() {
         return item.getMedia().getMedium();
     }
 
-    public final String getLarge() {
+    public final String getFullScreenImageURL() {
         return item.getMedia().getBig();
     }
 

@@ -249,7 +249,14 @@ public class MainActivity extends AppCompatActivity
 
                         //todo: apply a map transformation
                         images.clear();
+                        if (feed.getItems() == null) {
+                            // this should never happen
+                            return;
+                        }
                         for (FlickrFeedItem item: feed.getItems()) {
+                            if (!GalleryImage.isValid(item)) {
+                                continue;
+                            }
                             images.add(new GalleryImage(item));
                         }
                         galleryAdapter.notifyDataSetChanged();

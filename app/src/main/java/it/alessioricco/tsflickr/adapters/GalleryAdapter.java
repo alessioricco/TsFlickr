@@ -15,7 +15,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.List;
 
 import it.alessioricco.tsflickr.R;
-import it.alessioricco.tsflickr.activities.MainActivity;
 import it.alessioricco.tsflickr.models.GalleryImage;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,7 +53,7 @@ public final class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.Th
         final GalleryImage image = images.get(position);
 
         // https://futurestud.io/tutorials/glide-thumbnails
-        Glide.with(mContext).load(image.getMedium())
+        Glide.with(mContext).load(image.getThumbnailImageURL())
                 .thumbnail(0.5f)
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

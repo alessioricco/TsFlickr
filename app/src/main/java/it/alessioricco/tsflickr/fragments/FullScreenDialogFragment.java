@@ -129,7 +129,7 @@ public class FullScreenDialogFragment extends DialogFragment {
 
             final GalleryImage image = images.get(position);
 
-            Glide.with(getActivity()).load(image.getLarge())
+            Glide.with(getActivity()).load(image.getFullScreenImageURL())
                     .thumbnail(0.5f)
                     .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
