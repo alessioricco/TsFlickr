@@ -2,9 +2,11 @@ package it.alessioricco.tsflickr.fragments;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -17,6 +19,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -24,6 +27,7 @@ import it.alessioricco.tsflickr.R;
 import it.alessioricco.tsflickr.models.GalleryImage;
 import it.alessioricco.tsflickr.models.GalleryImages;
 import it.alessioricco.tsflickr.utils.ImageDownloader;
+import it.alessioricco.tsflickr.utils.StringUtils;
 
 
 public class FullScreenDialogFragment extends DialogFragment {
@@ -46,15 +50,37 @@ public class FullScreenDialogFragment extends DialogFragment {
     FloatingActionButton fab;
 
     @InjectView(R.id.fab_1)
-    FloatingActionButton fab1;
+    FloatingActionButton fabBrowser;
 
     @InjectView(R.id.fab_2)
-    FloatingActionButton fab2;
+    FloatingActionButton fabGallery;
+
+    private Animation showFabBrowser;
+    private Animation hideFabBrowser;
+    private Animation showFabGallery;
+    private Animation hideFabGallery;
+
+    private Boolean isMenuOpen = false;
+    private String currentUrl = "";
 
     private int selectedPosition = 0;
 
     static public FullScreenDialogFragment create() {
         return new FullScreenDialogFragment();
+    }
+
+    private DialogInterface.OnDismissListener onDismissListener;
+
+    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
+        }
     }
 
     @Override
@@ -77,47 +103,85 @@ public class FullScreenDialogFragment extends DialogFragment {
 
         setCurrentItem(selectedPosition);
 
+        showFabBrowser = AnimationUtils.loadAnimation(getContext(), R.anim.fab1_show);
+        hideFabBrowser = AnimationUtils.loadAnimation(getContext(), R.anim.fab1_hide);
+        showFabGallery = AnimationUtils.loadAnimation(getContext(), R.anim.fab2_show);
+        hideFabGallery = AnimationUtils.loadAnimation(getContext(), R.anim.fab2_hide);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (fab1.isClickable()) {
+                if (isMenuOpen) {
+                    isMenuOpen = false;
                     hideFabMenu();
                     return;
                 }
+                isMenuOpen= true;
                 showFabMenu();
             }
         });
-        fab.bringToFront();
+
+        fabBrowser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (StringUtils.isNullOrEmpty(currentUrl)) {
+                    return;
+                }
+
+                Log.d(TAG, currentUrl);
+
+                final Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse(currentUrl));
+                startActivity(intent);
+            }
+        });
+
+        fabGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //todo: save on gallery
+                Toast.makeText(getContext(), "to be implemented", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return v;
     }
 
     private void showFabMenu() {
 
-        Animation show_fab_1 = AnimationUtils.loadAnimation(getContext(), R.anim.fab1_show);
+        final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fabBrowser.getLayoutParams();
+        layoutParams.rightMargin += (int) (fabBrowser.getWidth() * 1.7);
+        layoutParams.bottomMargin += (int) (fabBrowser.getHeight() * 0.25);
+        fabBrowser.setLayoutParams(layoutParams);
+        fabBrowser.startAnimation(showFabBrowser);
+        fabBrowser.setClickable(true);
 
-        fab.bringToFront();
+        final FrameLayout.LayoutParams layoutParamsfab2 = (FrameLayout.LayoutParams) fabGallery.getLayoutParams();
+        layoutParamsfab2.rightMargin += (int) (fabGallery.getWidth() * 1.5);
+        layoutParamsfab2.bottomMargin += (int) (fabGallery.getHeight() * 1.5);
+        fabGallery.setLayoutParams(layoutParamsfab2);
+        fabGallery.startAnimation(showFabGallery);
+        fabGallery.setClickable(true);
 
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
-        layoutParams.rightMargin += (int) (fab1.getWidth() * 1.7);
-        layoutParams.bottomMargin += (int) (fab1.getHeight() * 0.25);
-        fab1.setLayoutParams(layoutParams);
-        fab1.startAnimation(show_fab_1);
-        fab1.setClickable(true);
     }
 
     private void hideFabMenu() {
-        Animation hide_fab_1 = AnimationUtils.loadAnimation(getContext(), R.anim.fab1_hide);
 
-        fab.bringToFront();
+        final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fabBrowser.getLayoutParams();
+        layoutParams.rightMargin -= (int) (fabBrowser.getWidth() * 1.7);
+        layoutParams.bottomMargin -= (int) (fabBrowser.getHeight() * 0.25);
+        fabBrowser.setLayoutParams(layoutParams);
+        fabBrowser.startAnimation(hideFabBrowser);
+        fabBrowser.setClickable(false);
 
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
-        layoutParams.rightMargin -= (int) (fab1.getWidth() * 1.7);
-        layoutParams.bottomMargin -= (int) (fab1.getHeight() * 0.25);
-        fab1.setLayoutParams(layoutParams);
-        fab1.startAnimation(hide_fab_1);
-        fab1.setClickable(false);
+
+        final FrameLayout.LayoutParams layoutParamsfab2 = (FrameLayout.LayoutParams) fabGallery.getLayoutParams();
+        layoutParamsfab2.rightMargin -= (int) (fabGallery.getWidth() * 1.5);
+        layoutParamsfab2.bottomMargin -= (int) (fabGallery.getHeight() * 1.5);
+        fabGallery.setLayoutParams(layoutParamsfab2);
+        fabGallery.startAnimation(hideFabGallery);
+        fabGallery.setClickable(true);
     }
 
     private void setCurrentItem(int position) {
@@ -152,6 +216,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         title.setText(image.getTitle());
         timestamp.setText(image.getTimestamp());
         author.setText(image.getAuthor());
+        currentUrl = image.getUrl();
     }
 
     @Override
@@ -180,6 +245,8 @@ public class FullScreenDialogFragment extends DialogFragment {
             final ImageView imageViewPreview = (ImageView) view.findViewById(R.id.fullscreen_image);
 
             final GalleryImage image = images.get(position);
+
+            Log.d(TAG, image.getFullScreenImageURL());
 
             ImageDownloader.go(getContext(), image.getFullScreenImageURL(), imageViewPreview);
             container.addView(view);

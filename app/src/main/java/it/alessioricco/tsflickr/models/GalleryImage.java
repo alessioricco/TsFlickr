@@ -44,4 +44,8 @@ public final class GalleryImage implements Serializable {
     public final String getAuthor() {
         return item.getAuthor();
     }
+
+    public final String getUrl() {
+        return item.getLink();
+    }
 }

@@ -2,6 +2,7 @@ package it.alessioricco.tsflickr.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -61,7 +62,9 @@ public class MainActivity extends AppCompatActivity
     private ProgressDialog pDialog;
     private GalleryAdapter galleryAdapter;
 
-    SearchView searchView;
+    private SearchView searchView;
+
+    private Boolean isFullScreen = false;
 
     @InjectView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -75,15 +78,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -125,6 +119,14 @@ public class MainActivity extends AppCompatActivity
                         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                         final FullScreenDialogFragment newFragment = FullScreenDialogFragment.create();
                         newFragment.setArguments(bundle);
+                        newFragment.setOnDismissListener(new DialogInterface.OnDismissListener(){
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                isFullScreen = false;
+                                //fetchImages();
+                            }
+                        });
+                        isFullScreen = true;
                         newFragment.show(ft, "slideshow");
                     }
 
@@ -196,6 +198,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_settings:
                 return true;
             case R.id.action_sort:
+                //todo: sorting
                 Toast.makeText(this, "to be implemented", Toast.LENGTH_SHORT).show();
                 return true;
             default:
@@ -238,7 +241,9 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
 
-        fetchImages();
+        if (!isFullScreen) {
+            fetchImages();
+        }
 
     }
 
