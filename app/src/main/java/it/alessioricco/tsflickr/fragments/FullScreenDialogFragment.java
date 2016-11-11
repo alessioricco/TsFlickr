@@ -113,6 +113,12 @@ public class FullScreenDialogFragment extends DialogFragment {
 
         setCurrentItem(selectedPosition);
 
+        initializeMenu();
+
+        return v;
+    }
+
+    private void initializeMenu() {
         showFabBrowser = AnimationUtils.loadAnimation(getContext(), R.anim.fab1_show);
         hideFabBrowser = AnimationUtils.loadAnimation(getContext(), R.anim.fab1_hide);
         showFabGallery = AnimationUtils.loadAnimation(getContext(), R.anim.fab2_show);
@@ -121,102 +127,24 @@ public class FullScreenDialogFragment extends DialogFragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (isMenuOpen) {
-                    isMenuOpen = false;
-                    hideFabMenu();
-                    return;
-                }
-                isMenuOpen= true;
-                showFabMenu();
+                onToggleMenu();
             }
         });
 
         fabBrowser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (StringUtils.isNullOrEmpty(currentUrl)) {
-                    return;
-                }
-
-                Log.d(TAG, currentUrl);
-
-                final Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse(currentUrl));
-                startActivity(intent);
+                onOpenBrowser();
             }
         });
 
         fabGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (StringUtils.isNullOrEmpty(originalPictureUrl)) {
-                    return;
-                }
-
-                final ProgressDialog pDialog = new ProgressDialog(getContext());
-                pDialog.setMessage(getString(R.string.downloading));
-                pDialog.show();
-
-                new AsyncTask<Void, Void, Bitmap>() {
-                    @Override
-                    protected Bitmap doInBackground(Void... params) {
-                        Looper.prepare();
-                        Bitmap bitmap = null;
-                        try {
-                            bitmap = Glide.
-                                    with(getActivity()).
-                                    load(originalPictureUrl).
-                                    asBitmap().
-                                    into(-1,-1).
-                                    get();
-                        } catch (final ExecutionException e) {
-                            Log.e(TAG, e.getMessage());
-                        } catch (final InterruptedException e) {
-                            Log.e(TAG, e.getMessage());
-                        }
-                        return bitmap;
-                    }
-                    @Override
-                    protected void onPostExecute(Bitmap bitmap) {
-
-                        pDialog.dismiss();
-
-                        if (bitmap == null) {
-                            return;
-                        }
-
-                        try {
-
-                            MediaStore.Images.Media.insertImage(getActivity().getContentResolver(),
-                                    bitmap,
-                                    timestamp.getText().toString(),
-                                    title.getText().toString());
-
-                            Log.d(TAG, "Image loaded");
-                            Snackbar.make(viewPager, R.string.picture_downloaded, Snackbar.LENGTH_LONG)
-                                    .setAction(R.string.show, new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent i = new Intent(Intent.ACTION_PICK,
-                                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                            startActivity(i);
-                                        }
-                                    })
-                                    .show();
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }.execute();
-
+                onSaveOnSystemGallery();
             }
         });
 
-        return v;
     }
 
     private void showFabMenu() {
@@ -297,6 +225,90 @@ public class FullScreenDialogFragment extends DialogFragment {
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
     }
 
+    private final void onToggleMenu() {
+        if (isMenuOpen) {
+            isMenuOpen = false;
+            hideFabMenu();
+            return;
+        }
+        isMenuOpen= true;
+        showFabMenu();
+    }
+
+    private final void onOpenBrowser() {
+        if (StringUtils.isNullOrEmpty(currentUrl)) {
+            return;
+        }
+
+        Log.d(TAG, currentUrl);
+
+        final Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse(currentUrl));
+        startActivity(intent);
+    }
+
+    private final void onSaveOnSystemGallery() {
+        if (StringUtils.isNullOrEmpty(originalPictureUrl)) {
+            return;
+        }
+
+        final ProgressDialog pDialog = new ProgressDialog(getContext());
+        pDialog.setMessage(getString(R.string.downloading));
+        pDialog.show();
+
+        new AsyncTask<Void, Void, Bitmap>() {
+            @Override
+            protected Bitmap doInBackground(Void... params) {
+                Looper.prepare();
+                Bitmap bitmap = null;
+                try {
+                    bitmap = Glide.
+                            with(getActivity()).
+                            load(originalPictureUrl).
+                            asBitmap().
+                            into(-1,-1).
+                            get();
+                } catch (final ExecutionException e) {
+                    Log.e(TAG, e.getMessage());
+                } catch (final InterruptedException e) {
+                    Log.e(TAG, e.getMessage());
+                }
+                return bitmap;
+            }
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+
+                pDialog.dismiss();
+
+                if (bitmap == null) {
+                    return;
+                }
+
+                try {
+
+                    MediaStore.Images.Media.insertImage(getActivity().getContentResolver(),
+                            bitmap,
+                            timestamp.getText().toString(),
+                            title.getText().toString());
+
+                    Log.d(TAG, "Image loaded");
+                    Snackbar.make(viewPager, R.string.picture_downloaded, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.show, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent i = new Intent(Intent.ACTION_PICK,
+                                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                    startActivity(i);
+                                }
+                            })
+                            .show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }.execute();
+    }
     /**
      * Pager adapter.
      * Given the index, it will download the fullscreen image and it will display it
@@ -341,6 +353,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
         }
+
     }
 }
 
