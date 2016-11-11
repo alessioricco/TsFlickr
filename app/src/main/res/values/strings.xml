@@ -15,4 +15,6 @@
     <string name="accessibility_image_thumbnail">image thumbnail</string>
     <string name="sort_by_date_taken">Sort by date taken</string>
     <string name="sort_by_date_published">Sort by date published</string>
+    <string name="picture_downloaded">The picture was downloaded</string>
+    <string name="show">Show</string>
 </resources>

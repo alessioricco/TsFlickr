@@ -1,12 +1,18 @@
 package it.alessioricco.tsflickr.fragments;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -19,7 +25,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+
+import java.util.concurrent.ExecutionException;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -62,6 +71,7 @@ public class FullScreenDialogFragment extends DialogFragment {
 
     private Boolean isMenuOpen = false;
     private String currentUrl = "";
+    private String originalPictureUrl = "";
 
     private int selectedPosition = 0;
 
@@ -140,8 +150,69 @@ public class FullScreenDialogFragment extends DialogFragment {
         fabGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //todo: save on gallery
-                Toast.makeText(getContext(), "to be implemented", Toast.LENGTH_SHORT).show();
+
+                if (StringUtils.isNullOrEmpty(originalPictureUrl)) {
+                    return;
+                }
+
+                final ProgressDialog pDialog = new ProgressDialog(getContext());
+                pDialog.setMessage(getString(R.string.downloading));
+                pDialog.show();
+
+                new AsyncTask<Void, Void, Bitmap>() {
+                    @Override
+                    protected Bitmap doInBackground(Void... params) {
+                        Looper.prepare();
+                        Bitmap bitmap = null;
+                        try {
+                            bitmap = Glide.
+                                    with(getActivity()).
+                                    load(originalPictureUrl).
+                                    asBitmap().
+                                    into(-1,-1).
+                                    get();
+                        } catch (final ExecutionException e) {
+                            Log.e(TAG, e.getMessage());
+                        } catch (final InterruptedException e) {
+                            Log.e(TAG, e.getMessage());
+                        }
+                        return bitmap;
+                    }
+                    @Override
+                    protected void onPostExecute(Bitmap bitmap) {
+
+                        pDialog.dismiss();
+
+                        if (bitmap == null) {
+                            return;
+                        }
+
+                        try {
+
+                            MediaStore.Images.Media.insertImage(getActivity().getContentResolver(),
+                                    bitmap,
+                                    timestamp.getText().toString(),
+                                    title.getText().toString());
+
+                            Log.d(TAG, "Image loaded");
+                            Snackbar.make(viewPager, R.string.picture_downloaded, Snackbar.LENGTH_LONG)
+                                    .setAction(R.string.show, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent i = new Intent(Intent.ACTION_PICK,
+                                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                            startActivity(i);
+                                        }
+                                    })
+                                    .show();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }.execute();
+
             }
         });
 
@@ -217,6 +288,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         timestamp.setText(image.getTimestamp());
         author.setText(image.getAuthor());
         currentUrl = image.getUrl();
+        originalPictureUrl = image.getOriginal();
     }
 
     @Override

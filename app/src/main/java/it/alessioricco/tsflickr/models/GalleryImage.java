@@ -29,6 +29,10 @@ public final class GalleryImage implements Serializable {
         return item.getMedia().getMedium();
     }
 
+    public final String getOriginal() {
+        return item.getMedia().getOriginal();
+    }
+
     public final String getFullScreenImageURL() {
         return item.getMedia().getBig();
     }
