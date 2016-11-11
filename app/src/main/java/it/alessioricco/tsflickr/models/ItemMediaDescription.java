@@ -38,7 +38,7 @@ import lombok.Setter;
  */
 public class ItemMediaDescription implements Serializable {
 
-    //todo: improve all those "replace" because they are potentially buggy
+    //todo: (this is quick,dirty and buggy) improve the replace algo and use more consts
     @Getter @Setter private String m;
 
     public String getOriginal() {

@@ -5,6 +5,10 @@ import java.io.Serializable;
 
 /**
  * Adapt the FlickerFeedItem
+ *
+ * todo: we should apply a strategy for decide the right file to download
+ * this strategy should choose the right file depending on screen size and connection speed
+ *
  */
 public final class GalleryImage implements Serializable {
 

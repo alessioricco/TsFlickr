@@ -8,7 +8,7 @@
     <string name="downloading">Downloading images…</string>
     <string name="param_images">images</string>
     <string name="param_position">position</string>
-    <string name="error_downloading_gallery">Problem downloading the gallery</string>
+    <string name="error_downloading_gallery">Pictures not available</string>
     <string name="retry">Retry</string>
     <string name="search_tags">insert tags</string>
     <string name="accessibility_full_screen_image">full screen image</string>
@@ -17,4 +17,7 @@
     <string name="sort_by_date_published">Sort by date published</string>
     <string name="picture_downloaded">The picture was downloaded</string>
     <string name="show">Show</string>
+    <string name="menu_app_name">Flickr Public Feed</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet</string>
+    <string name="sort_by_date">Sort by Date</string>
 </resources>
