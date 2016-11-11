@@ -261,12 +261,7 @@ public class FullScreenDialogFragment extends DialogFragment {
                 Looper.prepare();
                 Bitmap bitmap = null;
                 try {
-                    bitmap = Glide.
-                            with(getActivity()).
-                            load(originalPictureUrl).
-                            asBitmap().
-                            into(-1,-1).
-                            get();
+                    bitmap = ImageDownloader.getBitmap(getContext(),originalPictureUrl);
                 } catch (final ExecutionException e) {
                     Log.e(TAG, e.getMessage());
                 } catch (final InterruptedException e) {
