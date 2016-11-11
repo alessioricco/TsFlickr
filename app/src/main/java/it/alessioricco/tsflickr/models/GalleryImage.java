@@ -3,6 +3,8 @@ package it.alessioricco.tsflickr.models;
 
 import java.io.Serializable;
 
+import it.alessioricco.tsflickr.utils.NetworkStatus;
+
 /**
  * Adapt the FlickerFeedItem
  *
@@ -13,12 +15,13 @@ import java.io.Serializable;
 public final class GalleryImage implements Serializable {
 
     private final FlickrFeedItem item;
+    private final int currentNetworkStatus;
 
-    public GalleryImage(FlickrFeedItem item) {
+    public GalleryImage(FlickrFeedItem item, int currentNetworkStatus) {
         if (!isValid(item)) {
             throw new IllegalArgumentException("the argument is null or invalid");
         }
-
+        this.currentNetworkStatus = currentNetworkStatus;
         this.item  = item;
     }
 
@@ -30,7 +33,13 @@ public final class GalleryImage implements Serializable {
     }
 
     public final String getThumbnailImageURL() {
-        return item.getMedia().getMedium();
+        if (currentNetworkStatus == NetworkStatus.WIFI) {
+            return item.getMedia().getMedium();
+        }
+        if (currentNetworkStatus == NetworkStatus.MOBILE) {
+            return item.getMedia().getLargeSquare();
+        }
+        return item.getMedia().getSmallSquare();
     }
 
     public final String getOriginal() {
@@ -38,7 +47,13 @@ public final class GalleryImage implements Serializable {
     }
 
     public final String getFullScreenImageURL() {
-        return item.getMedia().getBig();
+        if (currentNetworkStatus == NetworkStatus.WIFI) {
+            return item.getMedia().getBig();
+        }
+        if (currentNetworkStatus == NetworkStatus.MOBILE) {
+            return item.getMedia().getMedium();
+        }
+        return item.getMedia().getMedium();
     }
 
     public final String getTimestamp() {

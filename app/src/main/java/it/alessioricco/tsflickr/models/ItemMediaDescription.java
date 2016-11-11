@@ -49,6 +49,10 @@ public class ItemMediaDescription implements Serializable {
         return m.replace("_m.jpg", "_s.jpg");
     }
 
+    public String getLargeSquare() {
+        return m.replace("_m.jpg", "_q.jpg");
+    }
+
     public String getMedium() {
         return m.replace("_m.jpg", "_z.jpg");
     }

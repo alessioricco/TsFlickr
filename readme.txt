@@ -10,3 +10,4 @@ implement mail
 improve the floating button animation and distance
 add a better pull to refresh
 add icons
+the app works fine with a different orientation, but the thumbnails gallery must be improved

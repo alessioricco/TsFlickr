@@ -24,9 +24,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.concurrent.ExecutionException;
 
@@ -243,6 +247,9 @@ public class FullScreenDialogFragment extends DialogFragment {
         Log.d(TAG, currentUrl);
 
         final Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse(currentUrl));
+        if (intent == null) {
+            return;
+        }
         startActivity(intent);
     }
 
@@ -275,6 +282,10 @@ public class FullScreenDialogFragment extends DialogFragment {
                 pDialog.dismiss();
 
                 if (bitmap == null) {
+                    return;
+                }
+
+                if (getActivity() == null) {
                     return;
                 }
 

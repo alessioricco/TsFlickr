@@ -10,6 +10,7 @@ import org.robolectric.shadows.ShadowResources;
 import it.alessioricco.tsflickr.robolectric.TestEnvironment;
 import it.alessioricco.tsflickr.mocks.MockFlickrFeedItemFactory;
 import it.alessioricco.tsflickr.robolectric.CustomRobolectricTestRunner;
+import it.alessioricco.tsflickr.utils.NetworkStatus;
 import rx.android.BuildConfig;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
@@ -53,11 +54,11 @@ public class TestGalleryImages {
     public void testAddAndGetterWithInBoundIndex() throws Exception {
         assertThat(list.size()).isEqualTo(0);
 
-        list.add(new GalleryImage(MockFlickrFeedItemFactory.createFlickrFeedItem()));
+        list.add(new GalleryImage(MockFlickrFeedItemFactory.createFlickrFeedItem(), NetworkStatus.WIFI));
         assertThat(list.size()).isEqualTo(1);
         assertThat(list.get(0)).isNotNull();
 
-        list.add(new GalleryImage(MockFlickrFeedItemFactory.createFlickrFeedItem()));
+        list.add(new GalleryImage(MockFlickrFeedItemFactory.createFlickrFeedItem(), NetworkStatus.WIFI));
         assertThat(list.size()).isEqualTo(2);
         assertThat(list.get(1)).isNotNull();
 
@@ -69,8 +70,8 @@ public class TestGalleryImages {
     public void testClear() throws Exception {
         assertThat(list.size()).isEqualTo(0);
 
-        list.add(new GalleryImage(MockFlickrFeedItemFactory.createFlickrFeedItem()));
-        list.add(new GalleryImage(MockFlickrFeedItemFactory.createFlickrFeedItem()));
+        list.add(new GalleryImage(MockFlickrFeedItemFactory.createFlickrFeedItem(), NetworkStatus.WIFI));
+        list.add(new GalleryImage(MockFlickrFeedItemFactory.createFlickrFeedItem(), NetworkStatus.WIFI));
         assertThat(list.size()).isEqualTo(2);
 
         list.clear();

@@ -39,6 +39,7 @@ import it.alessioricco.tsflickr.models.FlickrFeedItem;
 import it.alessioricco.tsflickr.models.GalleryImage;
 import it.alessioricco.tsflickr.models.GalleryImages;
 import it.alessioricco.tsflickr.services.FlickrService;
+import it.alessioricco.tsflickr.utils.NetworkStatus;
 import it.alessioricco.tsflickr.utils.StringUtils;
 import rx.Observable;
 import rx.Subscriber;
@@ -65,6 +66,8 @@ public class MainActivity extends AppCompatActivity
     private SearchView searchView;
 
     private Boolean isFullScreen = false;
+
+    int currentNetworkStatus = NetworkStatus.NOCONNECTION;
 
     @InjectView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -304,7 +307,20 @@ public class MainActivity extends AppCompatActivity
      */
     private void showDownloadErrorMessage() {
 
-        Snackbar.make(recyclerView, R.string.error_downloading_gallery, Snackbar.LENGTH_LONG)
+        showErrorMessage(R.string.error_downloading_gallery);
+    }
+
+    /**
+     * Display a network error message with a retry button
+     */
+    private void showNetworkErrorMessage() {
+
+        showErrorMessage(R.string.error_network);
+    }
+
+    private void showErrorMessage(int resourceId) {
+
+        Snackbar.make(recyclerView, resourceId, Snackbar.LENGTH_LONG)
                 .setAction(R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -320,6 +336,19 @@ public class MainActivity extends AppCompatActivity
     private void fetchImages() {
         // it will fetch images
         if (compositeSubscription.isUnsubscribed()) {
+            return;
+        }
+
+        //todo: we should handle an event
+        try {
+            currentNetworkStatus = NetworkStatus.isInternetConnected(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, String.format("network status %d", currentNetworkStatus));
+        if (currentNetworkStatus == NetworkStatus.NOCONNECTION) {
+            showNetworkErrorMessage();
             return;
         }
 
@@ -340,7 +369,7 @@ public class MainActivity extends AppCompatActivity
             if (!GalleryImage.isValid(item)) {
                 continue;
             }
-            images.add(new GalleryImage(item));
+            images.add(new GalleryImage(item, currentNetworkStatus));
         }
     }
 

@@ -20,7 +20,6 @@ import lombok.Setter;
 /**
  * Gallery Adapter
  *
- * todo: remove deprecated code
  * todo: improve thumbnail quality
  */
 
