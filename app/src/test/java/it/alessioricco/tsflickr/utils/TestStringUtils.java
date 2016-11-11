@@ -1,11 +1,7 @@
 package it.alessioricco.tsflickr.utils;
 
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-
-import it.alessioricco.tsflickr.models.FlickrFeed;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 

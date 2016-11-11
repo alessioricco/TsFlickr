@@ -26,10 +26,7 @@ public final class GalleryImage implements Serializable {
     }
 
     public static boolean isValid(final FlickrFeedItem item) {
-        if (item == null) {
-            return false;
-        }
-        return item.getMedia() != null && item.getMedia().isValid();
+        return item != null && item.getMedia() != null && item.getMedia().isValid();
     }
 
     public final String getThumbnailImageURL() {

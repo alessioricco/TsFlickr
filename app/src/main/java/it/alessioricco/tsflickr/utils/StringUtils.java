@@ -1,9 +1,5 @@
 package it.alessioricco.tsflickr.utils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * String utility collection
  */

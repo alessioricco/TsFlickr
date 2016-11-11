@@ -24,13 +24,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 
 import java.util.concurrent.ExecutionException;
 
@@ -229,7 +223,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
     }
 
-    private final void onToggleMenu() {
+    private void onToggleMenu() {
         if (isMenuOpen) {
             isMenuOpen = false;
             hideFabMenu();
@@ -239,7 +233,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         showFabMenu();
     }
 
-    private final void onOpenBrowser() {
+    private void onOpenBrowser() {
         if (StringUtils.isNullOrEmpty(currentUrl)) {
             return;
         }
@@ -253,7 +247,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         startActivity(intent);
     }
 
-    private final void onSaveOnSystemGallery() {
+    private void onSaveOnSystemGallery() {
         if (StringUtils.isNullOrEmpty(originalPictureUrl)) {
             return;
         }
@@ -269,9 +263,7 @@ public class FullScreenDialogFragment extends DialogFragment {
                 Bitmap bitmap = null;
                 try {
                     bitmap = ImageDownloader.getBitmap(getContext(),originalPictureUrl);
-                } catch (final ExecutionException e) {
-                    Log.e(TAG, e.getMessage());
-                } catch (final InterruptedException e) {
+                } catch (final ExecutionException | InterruptedException e) {
                     Log.e(TAG, e.getMessage());
                 }
                 return bitmap;
