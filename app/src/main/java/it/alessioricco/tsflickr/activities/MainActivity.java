@@ -166,6 +166,7 @@ public class MainActivity extends AppCompatActivity
         MenuItem searchItem = menu.findItem(R.id.search);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
+        searchView.setQueryHint(getString(R.string.search_hint));
 
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
 
